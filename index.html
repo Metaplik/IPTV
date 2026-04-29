@@ -1,0 +1,155 @@
+<!DOCTYPE html><html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lecteur IPTV M3U</title><script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script><style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0b0b;
+  color: white;
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 320px;
+  background: #151515;
+  overflow-y: auto;
+  border-right: 1px solid #333;
+}
+
+.sidebar h2 {
+  padding: 10px;
+  font-size: 16px;
+  border-bottom: 1px solid #333;
+}
+
+.item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #222;
+  font-size: 14px;
+}
+
+.item:hover {
+  background: #2a2a2a;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  padding: 10px;
+  background: #111;
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 8px;
+  background: #222;
+  border: none;
+  color: white;
+}
+
+button {
+  padding: 8px 12px;
+  background: #2d6cdf;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  background: black;
+}
+
+.status {
+  font-size: 12px;
+  opacity: 0.7;
+  padding: 5px 10px;
+}
+</style></head><body><div class="sidebar">
+  <h2>Chaînes IPTV</h2>
+  <div id="list"></div>
+</div><div class="main">  <div class="topbar">
+    <input id="url" value="https://iptv-org.github.io/iptv/index.m3u" />
+    <button onclick="loadM3U()">Charger</button>
+  </div>  <div class="status" id="status">Prêt</div><video id="player" controls autoplay></video>
+
+</div><script>
+let channels = [];
+
+async function loadM3U() {
+  const url = document.getElementById("url").value;
+  const status = document.getElementById("status");
+
+  status.textContent = "Chargement de la playlist...";
+
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+
+    const lines = text.split("\n");
+    channels = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].startsWith("#EXTINF")) {
+        const name = lines[i].split(",")[1] || "Sans nom";
+        const url = lines[i + 1];
+
+        if (url && url.startsWith("http")) {
+          channels.push({ name, url });
+        }
+      }
+    }
+
+    renderList();
+    status.textContent = channels.length + " chaînes chargées";
+
+  } catch (e) {
+    status.textContent = "Erreur de chargement";
+    console.error(e);
+  }
+}
+
+function renderList() {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  channels.forEach((ch) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = ch.name;
+
+    div.onclick = () => play(ch.url);
+
+    list.appendChild(div);
+  });
+}
+
+function play(url) {
+  const video = document.getElementById("player");
+
+  if (Hls.isSupported() && url.includes(".m3u8")) {
+    const hls = new Hls();
+    hls.loadSource(url);
+    hls.attachMedia(video);
+  } else {
+    video.src = url;
+  }
+
+  video.play();
+}
+
+// auto load
+loadM3U();
+</script></body>
+</html>
