@@ -600,6 +600,135 @@
   }
   .corner-tl { top: 6px; left: 6px; border-width: 1px 0 0 1px; }
   .corner-br { bottom: 6px; right: 6px; border-width: 0 1px 1px 0; }
+
+  /* ========== RESPONSIVE MOBILE ========== */
+
+  /* PORTRAIT MOBILE: video on top, channel list below */
+  @media (max-width: 768px) and (orientation: portrait) {
+    body {
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: 44px;
+      padding: 0 12px;
+    }
+
+    .topbar-logo img { height: 28px; }
+    .brand-text { font-size: 14px; letter-spacing: 3px; }
+    .brand-sub { display: none; }
+    .shortcut-badge { display: none; }
+
+    .main-layout {
+      flex-direction: column;
+    }
+
+    /* Player comes first in DOM — stays on top */
+    .player-area {
+      flex: 0 0 auto;
+      height: 56vw;  /* 16:9 ratio approximation */
+      min-height: 200px;
+      max-height: 50dvh;
+      order: 0;
+    }
+
+    .video-wrap { height: 100%; }
+
+    .player-info {
+      height: 36px;
+      padding: 0 10px;
+      gap: 8px;
+    }
+
+    .now-playing-label { display: none; }
+    .player-status { display: none; }
+
+    .now-playing-name {
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Sidebar below video */
+    .sidebar {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      border-right: none;
+      border-top: 1px solid var(--border-bright);
+      order: 1;
+    }
+
+    .search-zone { padding: 8px 10px; }
+    .search-label { display: none; }
+    .search-input { padding: 7px 8px 7px 28px; font-size: 14px; }
+
+    .channel-stats { padding: 6px 10px; }
+    .stat-num { font-size: 14px; }
+    .stat-label { font-size: 8px; }
+    .load-btn { padding: 5px 10px; font-size: 8px; }
+
+    .channel-item { padding: 9px 10px; }
+    .ch-name { font-size: 13px; }
+    .ch-meta { font-size: 9px; }
+
+    .empty-logo { font-size: 28px; }
+    .empty-msg { font-size: 8px; letter-spacing: 2px; }
+  }
+
+  /* LANDSCAPE MOBILE: sidebar left, video right */
+  @media (max-height: 500px) and (orientation: landscape) {
+    body { height: 100dvh; overflow: hidden; }
+
+    .topbar { height: 38px; padding: 0 10px; }
+    .topbar-logo img { height: 24px; }
+    .brand-text { font-size: 12px; letter-spacing: 2px; }
+    .brand-sub { display: none; }
+    .shortcut-badge { display: none; }
+
+    .main-layout {
+      flex-direction: row;
+    }
+
+    /* Sidebar on LEFT */
+    .sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      order: 0;
+    }
+
+    /* Player on RIGHT */
+    .player-area {
+      flex: 1;
+      order: 1;
+    }
+
+    .search-zone { padding: 6px 8px; }
+    .search-label { display: none; }
+    .search-input { padding: 6px 8px 6px 26px; font-size: 13px; }
+
+    .channel-stats { padding: 4px 8px; }
+    .stat-num { font-size: 13px; }
+    .stat-label { font-size: 7px; }
+    .load-btn { padding: 4px 8px; font-size: 8px; }
+
+    .channel-item { padding: 7px 8px; gap: 7px; }
+    .ch-name { font-size: 12px; }
+    .ch-meta { font-size: 9px; }
+    .ch-icon { width: 24px; height: 24px; }
+    .ch-num { width: 20px; font-size: 8px; }
+
+    .player-info { height: 34px; padding: 0 10px; gap: 8px; }
+    .now-playing-name { font-size: 12px; }
+    .now-playing-label { font-size: 7px; letter-spacing: 2px; }
+    .player-status { font-size: 8px; }
+  }
+
+  /* TABLET / SMALL DESKTOP: standard sidebar left layout */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .sidebar { width: 260px; }
+  }
+
 </style>
 </head>
 <body>
